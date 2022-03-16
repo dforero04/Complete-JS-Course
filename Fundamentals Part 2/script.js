@@ -1,164 +1,81 @@
-/* LESSON 10 - Values and Variables
-let country = "USA";
-let continent = "NA";
-let population = "332.4 million";
+/* LESSON 32 - Activating Strict Mode
+"use strict"; // Helps prevent bugs and show more clear logs for debugging
 
-console.log(country);
-console.log(continent);
-console.log(population);
+let hasDriversLicense = false;
+const passTest = true;
+
+if (passTest) hasDriverLicense = true;
+if (hasDriversLicense) console.log("I can drive!");
+
+const interface = "Audio"; // Reserved word
+const private = true; // Reserved word
 */
 
-/* LESSON 12 - Data Types
-let javascriptIsFun = true;
-console.log(javascriptIsFun);
-
-console.log(typeof true);
-console.log(typeof javascriptIsFun);
-console.log(typeof 23);
-console.log(typeof "Daniel");
-
-javascriptIsFun = "YES!";
-console.log(typeof javascriptIsFun);
-
-let year;
-console.log(year);
-console.log(typeof year);
-
-year = 1991;
-console.log(typeof year);
-
-// Returns object, which is a bug
-console.log(typeof null);
+/* LESSON 33 - Functions
+function fruitProcessor(numApples, numOranges) {
+  return `Juice with ${numApples} apples and ${numOranges} oranges.`;
+}
+console.log(fruitProcessor(3, 2));
 */
 
-/* LESSON 14 - Basic Operators
-console.log(2 ** 3);
-// 2 ** 3 means 2 to the power of 3
+/* LESSON 34 - Function Declaration vs Expression
+// Function Declaration
+const age1 = calcAge1(1992); // Can call function declaration before it has been declared
+console.log(age1);
+
+function calcAge1(birthYear) {
+  return 2022 - birthYear;
+}
+
+// Function Expression
+const calcAge2 = function (birthYear) {
+  return 2022 - birthYear;
+};
+const age2 = calcAge2(1992);
+console.log(age2);
+*/
+
+/* LESSON 35 - Arrow Functions
+// Function Expression
+const calcAge2 = function (birthYear) {
+  return 2022 - birthYear;
+};
+const age2 = calcAge2(1992);
+console.log(age2);
+
+// Arrow Function
+const calcAge3 = (birthYear) => 2022 - birthYear;
+const age3 = calcAge3(1992);
+console.log(age3);
 */
 
 /* CODING CHALLENGE #1
-const markMass = 78;
-// const markMass = 95;
-const markHeight = 1.69;
-// const markHeight = 1.88;
-const johnMass = 92;
-// const johnMass = 85;
-const johnHeight = 1.95;
-// const johnHeight = 1.76;
+const calcAverage = (score1, score2, score3) => (score1 + score2 + score3) / 3;
 
-const markBmi = markMass / markHeight ** 2;
-const johnBmi = johnMass / johnHeight ** 2;
-
-const markHigherBMI = markBmi > johnBmi;
-console.log(markBmi);
-console.log(johnBmi);
-console.log(markHigherBMI);
-*/
-
-/* LESSON 17 - Strings and Template Literals
-
-const firstName = "Daniel";
-const job = "programmer";
-const birthYear = 1992;
-const currentYear = 2022;
-
-const daniel =
-  "I'm " +
-  firstName +
-  ", a " +
-  (currentYear - birthYear) +
-  " year old " +
-  job +
-  "!";
-console.log(daniel);
-
-// Template Literal - must use back tick
-const danielNew = `I'm ${firstName}, a ${
-  currentYear - birthYear
-} year old ${job}!`;
-console.log(danielNew);
-*/
-
-/* CODING CHALLENGE #2
-const markMass = 78;
-const markHeight = 1.69;
-const johnMass = 92;
-const johnHeight = 1.95;
-
-// const markMass = 95;
-// const markHeight = 1.88;
-// const johnMass = 85;
-// const johnHeight = 1.76;
-
-const markBmi = markMass / markHeight ** 2;
-const johnBmi = johnMass / johnHeight ** 2;
-
-if (markBmi > johnBmi) {
-  console.log(`Mark's BMI (${markBmi}) is higher than John's BMI (${johnBmi})`);
-} else {
-  console.log(`John's BMI (${johnBmi}) is higher than Mark's BMI (${markBmi})`);
-}
-*/
-
-/* LESSON 21 - Truthy and Falsy Values
-// 5 Falsy values: 0, '', undefined, null, NaN
-const money = 0;
-if (money) {
-  console.log("Don't spend it all!");
-} else {
-  console.log("You should get a job!");
+function checkWinner(avgDolphins, avgKoalas) {
+  if (avgDolphins * 2 <= avgKoalas)
+    console.log(`Koalas win (${avgKoalas} vs. ${avgDolphins})`);
+  else if (avgKoalas * 2 <= avgDolphins)
+    console.log(`Dolphins win (${avgDolphins} vs. ${avgKoalas})`);
+  else console.log("No one wins!");
 }
 
-let height = 0;
-if (height) {
-  console.log("YAY! Height is defined");
-} else {
-  console.log("Height is UNDEFINED");
-}
+// const avgDolphins = calcAverage(44, 23, 71);
+// const avgKoalas = calcAverage(65, 54, 49);
+
+const avgDolphins = calcAverage(85, 54, 41);
+const avgKoalas = calcAverage(23, 34, 27);
+
+checkWinner(avgDolphins, avgKoalas);
 */
 
-/* CODING CHALLENGE #3 */
-// Data 1
-// const avgDolphins = (96 + 108 + 89) / 3;
-// const avgKoalas = (88 + 91 + 110) / 3;
+/* LESSON 40 - Basic Array Operations */
+const friends = ["Daniel", "Trevon", "Rob"];
+console.log(friends);
+// Add item to the front of an array
+friends.unshift("Brian");
+console.log(friends);
 
-// if (avgDolphins === avgKoalas)
-//   console.log(`TIE! (${avgDolphins} to ${avgKoalas})`);
-// else if (avgDolphins > avgKoalas)
-//   console.log(`Dolphins Win! (${avgDolphins} to ${avgKoalas})`);
-// else console.log(`Koalas Win! (${avgKoalas} to ${avgDolphins})`);
-
-// Data Bonus 1
-// const avgDolphins = (97 + 112 + 101) / 3;
-// const avgKoalas = (109 + 95 + 123) / 3;
-
-// if (avgDolphins === avgKoalas)
-//   console.log(`TIE! (${avgDolphins} to ${avgKoalas})`);
-// else if (avgDolphins > avgKoalas && avgDolphins >= 100)
-//   console.log(`Dolphins Win! (${avgDolphins} to ${avgKoalas})`);
-// else if (avgKoalas > avgDolphins && avgKoalas >= 100)
-//   console.log(`Koalas Win! (${avgKoalas} to ${avgDolphins})`);
-// else console.log(`No winners!`);
-
-// Data Bonus 2
-// const avgDolphins = (97 + 112 + 101) / 3;
-// const avgKoalas = (109 + 95 + 106) / 3;
-
-// if (avgDolphins === avgKoalas && avgDolphins >= 100 && avgKoalas >= 100)
-//   console.log(`TIE! (${avgDolphins} to ${avgKoalas})`);
-// else if (avgDolphins > avgKoalas && avgDolphins >= 100)
-//   console.log(`Dolphins Win! (${avgDolphins} to ${avgKoalas})`);
-// else if (avgKoalas > avgDolphins && avgKoalas >= 100)
-//   console.log(`Koalas Win! (${avgKoalas} to ${avgDolphins})`);
-// else console.log(`No winners!`);
-
-/* CODING CHALLENGE #4
-const bill = 430;
-const tip = bill >= 50 && bill <= 300 ? 0.15 * bill : 0.2 * bill;
-
-console.log(
-  `The bill was ${bill}, the tip was ${tip}, and the total value was ${
-    bill + tip
-  }.`
-);
-*/
+// Remove item from the front of an array
+friends.shift();
+console.log(friends);
