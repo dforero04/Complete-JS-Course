@@ -5,15 +5,25 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Learning HTML & CSS</title>
+    <link href="style.css" rel="stylesheet" />
+    <title>HTML & CSS Refresher</title>
   </head>
   <body>
     <h1>JavaScript is fun, but so is HTML & CSS!</h1>
-    <p>
+    <p class="first">
       You can learn JavaScript without HTML and CSS, but for DOM manipulation,
-      it's useful to have some basic ideas of HTML & CSS.
+      it's useful to have some basic ideas of HTML & CSS. You can see my GitHub
+      page on <a href="https://github.com/dforero04">My GitHub Page</a>
     </p>
     <h2>Another Heading</h2>
-    <p>Just another paragraph</p>
+    <p class="second">
+      Just another paragraph. Also, id's on elements must be unique
+    </p>
+    <form id="your-name">
+      <h2>Your name here!</h2>
+      <p>Please fill in this form :)</p>
+      <input type="text" placeholder="Your name" />
+      <button>Ok!</button>
+    </form>
   </body>
 </html>
