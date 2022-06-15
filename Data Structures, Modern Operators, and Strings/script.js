@@ -48,6 +48,104 @@ const restaurant = {
     console.log(...otherIngs);
   },
 };
+//////////////////////////////////////
+// Looping through objects
+//////////////////////////////////////
+
+// Object Property NAMES
+const props = Object.keys(restaurant);
+console.log(props);
+
+// Object Property VALUES
+const vals = Object.values(restaurant);
+console.log(vals);
+
+//////////////////////////////////////
+// Optional Chaining
+//////////////////////////////////////
+// Used to prevent errors if a property does not exist. It will just return undefined.
+// This can work with object properties, object methods, and arrays
+// const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+// for (const day of days) {
+//   const open =
+//     restaurant.openingHours[day]?.open ?? 'no time, because we are closed.';
+//   console.log(`On ${day}, we open at ${open}`);
+// }
+
+//////////////////////////////////////
+// Enhanced Object Literals
+//////////////////////////////////////
+// In ES6, you are able to add an object to another object by just putting the object name
+// in the new object.
+// Also, you do not have to declare a method within an object now. You can write a method directly.
+// Lastly, you can compute property names of an object.
+// const characteristics = ['height', 'weight', 'hairColor'];
+// const person = {
+//   name: 'Daniel',
+//   age: 29,
+//   welcomeMessage(string) {
+//     console.log(string);
+//   },
+//   [characteristics[0]]: '5\'9"',
+//   [characteristics[1]]: '170 lbs',
+//   [characteristics[2]]: 'black',
+// };
+
+// const family = {
+//   name: 'Forero',
+//   person,
+// };
+// console.log(family);
+// console.log(person.welcomeMessage('Hello!'));
+
+//////////////////////////////////////
+// // For-Of Loop
+// const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+
+// for (const item of menu) console.log(item);
+
+// // If you need to get the indices
+// for (const [index, value] of menu.entries()) {
+//   console.log(`${index}: ${value}`);
+// }
+
+//////////////////////////////////////
+// Logical Assignment Operators
+
+// const rest1 = {
+//   name: 'Capri',
+//   numGuests: 10,
+// };
+
+// const rest2 = {
+//   name: 'La Piazza',
+//   owner: 'James',
+// };
+
+// OR assignment operator
+// rest1.numGuests = rest1.numGuests || 10;
+// rest2.numGuests = rest2.numGuests || 10;
+// rest1.numGuests ||= 10;
+// rest2.numGuests ||= 10;
+
+// console.log(rest1);
+// console.log(rest2);
+
+// Nullish assignment operator
+// So, if guests in rest1 was 0, it would actually be set to 0
+// rest1.numGuests ??= 10;
+// rest2.numGuests ??= 10;
+
+// console.log(rest1);
+// console.log(rest2);
+
+// AND assignment operator
+// rest1.owner &&= '<ANONYMOUS>';
+// rest2.owner &&= '<ANONYMOUS>';
+
+// console.log(rest1);
+// console.log(rest2);
 
 //////////////////////////////////////
 // Nullish Coalescing Operator ??
@@ -225,3 +323,97 @@ const restaurant = {
 // Default values
 // const [p = 1, q = 1, r = 1] = [8, 9];
 // console.log(p, q, r);
+
+///////////////////////////////////////////////////////////
+// CODING CHALLENGE #1
+//
+/* 
+We're building a football betting app (soccer for my American friends 😅)!
+Suppose we get data from a web service about a certain game. In this challenge we're gonna work with that data.
+*/
+
+// const game = {
+//   team1: 'Bayern Munich',
+//   team2: 'Borrussia Dortmund',
+//   players: [
+//     [
+//       'Neuer',
+//       'Pavard',
+//       'Martinez',
+//       'Alaba',
+//       'Davies',
+//       'Kimmich',
+//       'Goretzka',
+//       'Coman',
+//       'Muller',
+//       'Gnarby',
+//       'Lewandowski',
+//     ],
+//     [
+//       'Burki',
+//       'Schulz',
+//       'Hummels',
+//       'Akanji',
+//       'Hakimi',
+//       'Weigl',
+//       'Witsel',
+//       'Hazard',
+//       'Brandt',
+//       'Sancho',
+//       'Gotze',
+//     ],
+//   ],
+//   score: '4:0',
+//   scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+//   date: 'Nov 9th, 2037',
+//   odds: {
+//     team1: 1.33,
+//     x: 3.25,
+//     team2: 6.5,
+//   },
+//   printGoals: function (...playerNames) {
+//     for (const player of playerNames) {
+//       console.log(player);
+//     }
+//     console.log(`Total number of goals were: ${playerNames.length}`);
+//   },
+// };
+// //1. Create one player array for each team (variables 'players1' and 'players2').
+// const [players1, players2] = game.players;
+// console.log(players1, players2);
+
+// // 2. The first player in any player array is the goalkeeper and the others are field
+// // players. For Bayern Munich (team 1) create one variable ('gk') with the
+// // goalkeeper's name, and one array ('fieldPlayers') with all the remaining 10
+// // field players
+// const [gk, ...fieldPlayers] = players1;
+// console.log(gk, fieldPlayers);
+
+// //3. Create an array 'allPlayers' containing all players of both teams (22 players)
+// const allPlayers = [...players1, ...players2];
+// console.log(allPlayers);
+
+// // 4. During the game, Bayern Munich (team 1) used 3 substitute players. So create a
+// // new array ('players1Final') containing all the original team1 players plus
+// // 'Thiago', 'Coutinho' and 'Perisic'
+// const players1Final = [...players1, 'Thiago', 'Coutingo', 'Perisic'];
+// console.log(players1Final);
+
+// //5. Based on the game.odds object, create one variable for each odd (called
+// // 'team1', 'draw' and 'team2')
+// const { team1, x: draw, team2 } = game.odds;
+// console.log(team1, draw, team2);
+
+// // 6. Write a function ('printGoals') that receives an arbitrary number of player
+// // names (not an array) and prints each of them to the console, along with the
+// // number of goals that were scored in total (number of player names passed in)
+// // Test data for 6.: First, use players 'Davies', 'Muller', 'Lewandowski', 'Kimmich'.
+// // Then, call the function again with players from game.scored
+// game.printGoals('Davies', 'Muller', 'Lewandowski', 'Kimmich');
+// game.printGoals(...game.scored);
+
+// // 7. The team with the lower odd is more likely to win. Print to the console which
+// // team is more likely to win, without using an if/else statement or the ternary
+// // operator.
+// team1 < team2 && console.log('Team 1 is more likely to win');
+// team2 < team1 && console.log('Team 2 is more likely to win');
