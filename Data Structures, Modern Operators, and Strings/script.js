@@ -1,53 +1,182 @@
 'use strict';
 
 // Data needed for a later exercise
-const flights =
-  '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
+// const flights =
+//   '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
 
-// Data needed for first part of the section
-const restaurant = {
-  name: 'Classico Italiano',
-  location: 'Via Angelo Tavanti 23, Firenze, Italy',
-  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
-  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
-  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
-  openingHours: {
-    thu: {
-      open: 12,
-      close: 22,
-    },
-    fri: {
-      open: 11,
-      close: 23,
-    },
-    sat: {
-      open: 0, // Open 24 hours
-      close: 24,
-    },
-  },
-  order: function (starter, main) {
-    return [this.starterMenu[starter], this.mainMenu[main]];
-  },
-  orderDelivery: function ({
-    starterIndex = 1,
-    mainIndex = 1,
-    address,
-    time = '12:00',
-  }) {
-    console.log(
-      `Order Received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}!`
-    );
-  },
-  orderPasta: function (ing1, ing2, ing3) {
-    console.log(
-      `Here is your delicious pasta with ${ing1}, ${ing2}, and ${ing3}!`
-    );
-  },
-  orderPizza: function (mainIng, ...otherIngs) {
-    console.log(mainIng);
-    console.log(...otherIngs);
-  },
-};
+// // Make this look like this
+// //   ⛔ Delayed Departure from FAO to TXL (11h25)
+// //                 Arrival from BRU to FAO (11h45)
+// //   ⛔ Delayed Departure from HEL to FAO (12h05)
+// //               Departure from FAO to LIS (12h30)
+
+// const wordArr = flights.split('+');
+
+// for (let word of wordArr) {
+//   let [status, from, to, time] = word.split(';');
+//   from = from.slice(0, 3).toUpperCase();
+//   to = to.slice(0, 3).toUpperCase();
+//   time.replaceAll(':', 'h');
+//   console.log(
+//     `${status.startsWith('_Delayed') ? '⛔' : ''} ${status.replaceAll(
+//       '_',
+//       ''
+//     )} from ${from} to ${to} (${time})`.padStart(43)
+//   );
+// }
+
+// // Data needed for first part of the section
+// const restaurant = {
+//   name: 'Classico Italiano',
+//   location: 'Via Angelo Tavanti 23, Firenze, Italy',
+//   categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+//   starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+//   mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+//   openingHours: {
+//     thu: {
+//       open: 12,
+//       close: 22,
+//     },
+//     fri: {
+//       open: 11,
+//       close: 23,
+//     },
+//     sat: {
+//       open: 0, // Open 24 hours
+//       close: 24,
+//     },
+//   },
+//   order: function (starter, main) {
+//     return [this.starterMenu[starter], this.mainMenu[main]];
+//   },
+//   orderDelivery: function ({
+//     starterIndex = 1,
+//     mainIndex = 1,
+//     address,
+//     time = '12:00',
+//   }) {
+//     console.log(
+//       `Order Received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}!`
+//     );
+//   },
+//   orderPasta: function (ing1, ing2, ing3) {
+//     console.log(
+//       `Here is your delicious pasta with ${ing1}, ${ing2}, and ${ing3}!`
+//     );
+//   },
+//   orderPizza: function (mainIng, ...otherIngs) {
+//     console.log(mainIng);
+//     console.log(...otherIngs);
+//   },
+// };
+
+//////////////////////////////////////////
+// Which Data Structure to use?
+// Data can come from 3 different sources
+// - From program itself (data written directly in source code)
+// - From UI (Input data or data written in DOM)
+// - From external sources (data fetched from web API)
+//
+// If we have a simple list of data, use an ARRAY or SET
+// - Array
+//    -- Ordered list of values
+//    -- Manipulate data
+// - Set
+//    -- Unique values
+//    -- High performance is important
+//    -- To remove duplicates from array
+//
+// If we need key/value pairs, use an OBJECT or MAP
+// - Object
+//    -- It is just a more traditional approach
+//    -- Easier to write and access values with . and []
+//    -- When you need to include functions
+//    -- When working with JSON
+// - Map
+//    -- Better perfornmance
+//    -- Keys can be ANY data types
+//    -- Easy to iterate
+//    -- Easy to compute size
+//////////////////////////////////////////
+
+// ///////////////////////////////////////
+// // Maps - Iteration
+// //////////////////////////////////////
+
+// // Initialize a map.
+// const question = new Map([
+//   ['question', 'what is the best programming language in the world?'],
+//   [1, 'C'],
+//   [2, 'Java'],
+//   [3, 'javascript'],
+//   ['correct', 3],
+//   [true, 'Correct!'],
+//   [false, 'Try Again!'],
+// ]);
+
+// // // Convert Object to map
+// // const hoursMap = new Map(Object.entries(restaurant.openingHours));
+// // console.log(hoursMap);
+
+// for (const [key, value] of question) {
+//   if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+// }
+// // const answer = Number(prompt('Your Answer?'));
+// const answer = 3;
+// console.log(question.get(question.get('correct') === Number(answer)));
+
+// // Convert Map to Array
+// console.log([...question]);
+// console.log([...question.keys()]);
+// console.log([...question.values()]);
+
+//////////////////////////////////////
+// Maps - Fundamentals
+// Key, Value pairs
+//////////////////////////////////////
+// const rest = new Map();
+// rest.set('name', 'Classico Italiano');
+// rest.set(1, 'USA');
+// rest.set(2, 'Italy');
+// rest
+//   .set('open', 11)
+//   .set('closed', 23)
+//   .set(true, 'We are open')
+//   .set(false, 'We are closed');
+
+// const time = 21;
+// console.log(rest.get(time > rest.get('open') && time < rest.get('closed')));
+
+// const arr = [1, 2];
+// rest.set(arr, 'Test');
+// console.log(rest);
+
+// rest.set(document.querySelector('h1'), 'Heading');
+// console.log(rest);
+
+//////////////////////////////////////
+// Sets
+// Unordered, non-indexed, unique-valued data structure
+//////////////////////////////////////
+// const orderSet = new Set(['Pasta', 'Pizza', 'Risotto', 'Pizza', 'Pasta']);
+// console.log(orderSet);
+// console.log(orderSet.size);
+// console.log(orderSet.has('Pizza'));
+// console.log(orderSet.has('Bread'));
+// console.log(orderSet.add('Garlic Bread'));
+// orderSet.delete('Pizza');
+// console.log(orderSet);
+
+// for (const order of orderSet) console.log(order);
+
+// // Example
+// const staff = ['waiter', 'chef', 'waiter', 'manager', 'chef', 'waiter'];
+// const staffUnique = new Set(staff);
+// console.log(staffUnique);
+// // Make into an Array
+// const staffArray = [...new Set(staff)];
+// console.log(staffArray);
+
 //////////////////////////////////////
 // Looping through objects
 //////////////////////////////////////
@@ -219,7 +348,7 @@ const restaurant = {
 
 //////////////////////////////////////
 // // Spread Operator
-// // Used to build new arrays or pass multiple values into a function
+// // Used to build/combine new arrays or pass multiple values into a function
 // // ... is on the right side of the assignment operator
 // const arr = [7, 8, 9];
 // const newArr = [5, 6, ...arr];
@@ -340,52 +469,52 @@ We're building a football betting app (soccer for my American friends 😅)!
 Suppose we get data from a web service about a certain game. In this challenge we're gonna work with that data.
 */
 
-const game = {
-  team1: 'Bayern Munich',
-  team2: 'Borrussia Dortmund',
-  players: [
-    [
-      'Neuer',
-      'Pavard',
-      'Martinez',
-      'Alaba',
-      'Davies',
-      'Kimmich',
-      'Goretzka',
-      'Coman',
-      'Muller',
-      'Gnarby',
-      'Lewandowski',
-    ],
-    [
-      'Burki',
-      'Schulz',
-      'Hummels',
-      'Akanji',
-      'Hakimi',
-      'Weigl',
-      'Witsel',
-      'Hazard',
-      'Brandt',
-      'Sancho',
-      'Gotze',
-    ],
-  ],
-  score: '4:0',
-  scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
-  date: 'Nov 9th, 2037',
-  odds: {
-    team1: 1.33,
-    x: 3.25,
-    team2: 6.5,
-  },
-  printGoals: function (...playerNames) {
-    for (const player of playerNames) {
-      console.log(player);
-    }
-    console.log(`Total number of goals were: ${playerNames.length}`);
-  },
-};
+// const game = {
+//   team1: 'Bayern Munich',
+//   team2: 'Borrussia Dortmund',
+//   players: [
+//     [
+//       'Neuer',
+//       'Pavard',
+//       'Martinez',
+//       'Alaba',
+//       'Davies',
+//       'Kimmich',
+//       'Goretzka',
+//       'Coman',
+//       'Muller',
+//       'Gnarby',
+//       'Lewandowski',
+//     ],
+//     [
+//       'Burki',
+//       'Schulz',
+//       'Hummels',
+//       'Akanji',
+//       'Hakimi',
+//       'Weigl',
+//       'Witsel',
+//       'Hazard',
+//       'Brandt',
+//       'Sancho',
+//       'Gotze',
+//     ],
+//   ],
+//   score: '4:0',
+//   scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+//   date: 'Nov 9th, 2037',
+//   odds: {
+//     team1: 1.33,
+//     x: 3.25,
+//     team2: 6.5,
+//   },
+//   printGoals: function (...playerNames) {
+//     for (const player of playerNames) {
+//       console.log(player);
+//     }
+//     console.log(`Total number of goals were: ${playerNames.length}`);
+//   },
+// };
 // //1. Create one player array for each team (variables 'players1' and 'players2').
 // const [players1, players2] = game.players;
 // console.log(players1, players2);
@@ -434,37 +563,132 @@ const game = {
 /*
 Let's continue with our football betting app! Keep using the 'game' variable from
 before.
-4. Bonus: Create an object called 'scorers' which contains the names of the
-players who scored as properties, and the number of goals as the value. In this
-game, it will look like this:
-{
-Gnarby: 1,
-Hummels: 1,
-Lewandowski: 2
-}
 */
 
 /* 1. Loop over the game.scored array and print each player name to the console,
 along with the goal number (Example: "Goal 1: Lewandowski") */
-const entries = Object.entries(game.scored);
+// const entries = Object.entries(game.scored);
 
-for (const [index, player] of entries)
-  console.log(`Goal ${Number(index) + 1}: ${player}`);
+// for (const [index, player] of entries)
+//   console.log(`Goal ${Number(index) + 1}: ${player}`);
 
-/* 2. Use a loop to calculate the average odd and log it to the console */
-const gameOdds = Object.values(game.odds);
-let sum = 0;
-for (const odd of gameOdds) sum += odd;
-console.log('Average odd is: ' + sum / gameOdds.length);
+// /* 2. Use a loop to calculate the average odd and log it to the console */
+// const gameOdds = Object.values(game.odds);
+// let sum = 0;
+// for (const odd of gameOdds) sum += odd;
+// console.log('Average odd is: ' + sum / gameOdds.length);
 
-/* 3. Print the 3 odds to the console, but in a nice formatted way, exactly like this:
-Odd of victory Bayern Munich: 1.33
-Odd of draw: 3.25
-Odd of victory Borrussia Dortmund: 6.5
-Get the team names directly from the game object, don't hardcode them
-(except for "draw"). Hint: Note how the odds and the game objects have the
-same property names */
-for (const [team, odd] of Object.entries(game.odds)) {
-  const teamStr = team === 'x' ? 'draw' : `victory ${game[team]}`;
-  console.log(`Odd of ${teamStr}: ${odd}`);
-}
+// /* 3. Print the 3 odds to the console, but in a nice formatted way, exactly like this:
+// Odd of victory Bayern Munich: 1.33
+// Odd of draw: 3.25
+// Odd of victory Borrussia Dortmund: 6.5
+// Get the team names directly from the game object, don't hardcode them
+// (except for "draw"). Hint: Note how the odds and the game objects have the
+// same property names */
+// for (const [team, odd] of Object.entries(game.odds)) {
+//   const teamStr = team === 'x' ? 'draw' : `victory ${game[team]}`;
+//   console.log(`Odd of ${teamStr}: ${odd}`);
+// }
+
+// /* 4. Bonus: Create an object called 'scorers' which contains the names of the
+// players who scored as properties, and the number of goals as the value. In this
+// game, it will look like this:
+// {
+// Gnarby: 1,
+// Hummels: 1,
+// Lewandowski: 2
+// } */
+// const scorers = {};
+// for (const player of game.scored) {
+//   scorers[player] ? scorers[player]++ : (scorers[player] = 1);
+// }
+// console.log(scorers);
+
+///////////////////////////////////////////////////////////////////////////////////
+// Coding Challenge #3
+//////////////////////////////////////////////////////////////////////////////////
+
+/* Let's continue with our football betting app! This time, we have a map called
+'gameEvents' (see below) with a log of the events that happened during the
+game. The values are the events themselves, and the keys are the minutes in which
+each event happened (a football game has 90 minutes plus some extra time).
+GOOD LUCK 😀 */
+
+// const gameEvents = new Map([
+//   [17, '⚽ GOAL'],
+//   [36, '🔁 Substitution'],
+//   [47, '⚽ GOAL'],
+//   [61, '🔁 Substitution'],
+//   [64, '🔶 Yellow card'],
+//   [69, '🔴 Red card'],
+//   [70, '🔁 Substitution'],
+//   [72, '🔁 Substitution'],
+//   [76, '⚽ GOAL'],
+//   [80, '⚽ GOAL'],
+//   [92, '🔶 Yellow card'],
+// ]);
+
+// // 1. Create an array 'events' of the different game events that happened (no duplicates)
+// const events = [...new Set(gameEvents.values())];
+// console.log(events);
+
+// // 2. After the game has finished, is was found that the yellow card from minute 64
+// // was unfair. So remove this event from the game events log.
+// gameEvents.delete(64);
+// console.log(gameEvents);
+
+// // 3. Compute and log the following string to the console: "An event happened, on
+// // average, every 9 minutes" (keep in mind that a game has 90 minutes)
+// console.log(
+//   `An event happened, on average, every ${90 / gameEvents.size} minutes.`
+// );
+
+// //  4. Loop over 'gameEvents' and log each element to the console, marking
+// //  whether it's in the first half or second half (after 45 min) of the game, like this:
+// //  [FIRST HALF] 17:⚽ GOAL
+// for (const [key, value] of gameEvents) {
+//   console.log(
+//     `${key <= 45 ? '[FIRST HALF]' : '[SECOND HALF]'} ${key}: ${value}`
+//   );
+// }
+
+/* Write a program that receives a list of variable names written in underscore_case and convert them to camelCase. The input will come from a textarea inserted into the DOM (see code below to insert the elements), and conversion will happen when the button is pressed. Test data (pasted to textarea, including spaces):
+underscore_case
+ first_name
+Some_Variable
+  calculate_AGE
+delayed_departure
+Should produce this output (5 separate console.log outputs):
+underscoreCase ✅
+firstName ✅✅
+someVariable ✅✅✅
+calculateAge ✅✅✅✅
+delayedDeparture ✅✅✅✅✅
+Hints:
+§ Remember which character defines a new line in the textarea 😉
+§ The solution only needs to work for a variable made out of 2 words, like a_b
+§ Start without worrying about the ✅. Tackle that only after you have the variable
+name conversion working 😉
+§ This challenge is difficult on purpose, so start watching the solution in case
+you're stuck. Then pause and continue!
+Afterwards, test with your own test data!
+GOOD LUCK 😀
+*/
+// document.body.append(document.createElement('textarea'));
+// document.body.append(document.createElement('button'));
+// const textArea = document.querySelector('textarea');
+// const btn = document.querySelector('button');
+
+// btn.addEventListener('click', function () {
+//   const string = textArea.value;
+//   const wordArr = string.toLowerCase().split('\n');
+//   convertWords(wordArr);
+// });
+
+// const convertWords = function (words) {
+//   for (let [index, word] of words.entries()) {
+//     let [first, second] = word.trim().split('_');
+//     const output = first + second.replace(second[0], second[0].toUpperCase());
+//     console.log(`${output.padEnd(20)}${'👌'.repeat(index + 1)}`);
+//   }
+// };
