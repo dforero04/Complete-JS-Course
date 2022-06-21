@@ -302,12 +302,12 @@ Hints: Use many of the tools you learned about in this and the last section
 
 // The inner function is a closure, and therefore you are able to continuously
 // change the color of the 'h1' element
-(function () {
-  const header = document.querySelector('h1');
-  header.style.color = 'red';
-  document.body.addEventListener('click', function () {
-    header.style.color === 'red'
-      ? (header.style.color = 'blue')
-      : (header.style.color = 'red');
-  });
-})();
+// (function () {
+//   const header = document.querySelector('h1');
+//   header.style.color = 'red';
+//   document.body.addEventListener('click', function () {
+//     header.style.color === 'red'
+//       ? (header.style.color = 'blue')
+//       : (header.style.color = 'red');
+//   });
+// })();
