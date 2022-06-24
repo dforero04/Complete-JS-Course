@@ -78,11 +78,16 @@ const formatUSDAmount = function (amount) {
     currency: 'USD',
     minimumFractionDigits: 2,
   });
+
   return amountFormat.format(amount);
 };
 
-const displayTransactions = function (account) {
+const displayTransactions = function (account, sort = false) {
   let html;
+  let transactions;
+
+  containerTransactions.innerHTML = '';
+
   if (account.transactions.length === 0) {
     html = `
     <div class="transactions__row">
@@ -91,7 +96,11 @@ const displayTransactions = function (account) {
   `;
     containerTransactions.insertAdjacentHTML('afterbegin', html);
   } else {
-    account.transactions.forEach(function (tran, i) {
+    transactions = sort
+      ? account.transactions.slice().sort((a, b) => a - b) // you need .slice() to make a shallow copy
+      : account.transactions;
+
+    transactions.forEach(function (tran, i) {
       const typeTransaction = tran > 0 ? 'deposit' : 'withdrawal';
       html = `
       <div class="transactions__row">
@@ -142,6 +151,7 @@ let currentAccount;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
+
   currentAccount = findUser(inputLoginUsername.value);
   if (!currentAccount) alert('Incorrect Username!');
   else if (Number(inputLoginPin.value) !== currentAccount?.pin)
@@ -162,8 +172,10 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
+
   const transTo = findUser(inputTransferTo.value);
   const transAmt = Number(inputTransferAmount.value);
+
   if (!transTo) alert('TRANSFER ACCOUNT NOT FOUND!');
   else if (transAmt > currentAccount.balance)
     alert('TRANSFER AMOUNT GREATER THAN ACCOUNT BALANCE!');
@@ -181,7 +193,9 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
+
   const loanAmt = Number(inputLoanAmount.value);
+
   if (loanAmt <= 0) alert('YOU MUST ASK FOR AT LEAST $0.01.');
   else if (!currentAccount.transactions.some(trans => trans >= loanAmt * 0.1))
     alert('YOU MUST HAVE A DEPOSIT THAT IS AT LEAST 10% OF THE LOAN AMOUNT!');
@@ -195,8 +209,10 @@ btnLoan.addEventListener('click', function (e) {
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
+
   const closeUsername = findUser(inputCloseUsername.value);
   const closePin = Number(inputClosePin.value);
+
   if (!closeUsername) alert('USER ACCOUNT NOT FOUND!');
   else if (
     closeUsername !== currentAccount.username &&
@@ -213,4 +229,11 @@ btnClose.addEventListener('click', function (e) {
   }
   inputTransferAmount.value = inputTransferTo.value = '';
   currentAccount = 'No user logged in.';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayTransactions(currentAccount, !sorted);
+  sorted = !sorted;
 });

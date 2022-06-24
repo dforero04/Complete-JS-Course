@@ -38,12 +38,102 @@ const accounts = [account1, account2, account3, account4];
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+/////////////////////////////////////////////////
+// Array methods practice
+/////////////////////////////////////////////////
+// If we want to create an object that contains the sum of all deposits and all withdrawals,
+// we can use the reduce() method as such:
+// In the case below, the accumulator is an object holding 2 sums
+// Each iteration, we return the whole object
+// const { deposits, withdrawals } = accounts
+//   .flatMap(acc => acc.transactions)
+//   .reduce(
+//     (sums, cur) => {
+//       cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+//       return sums;
+//     },
+//     { deposits: 0, withdrawals: 0 }
+//   );
+
+// console.log(`Deposits: ${deposits}, Withdrawals: ${withdrawals}`);
+
+// /////////////////////////////////////////////////
+// // Array fill() and Array.from()
+// // - these two methods can be used to initialize new arrays of a certain length
+// // - Array.from() can be useful in getting elements from the UI and putting them into
+// // an array
+// /////////////////////////////////////////////////
+// const arr = new Array(7);
+// console.log(arr);
+// arr.fill(2);
+// console.log(arr);
+// console.log('-----------OR------------');
+// const arr2 = Array.from({ length: 7 }, () => 2);
+// console.log(arr2);
+
+// /////////////////////////////////////////////////
+// // Array sort() method
+// // - returns a new array that is sorted based on STRING values
+// // - you can pass in a function on which to sort upon
+// /////////////////////////////////////////////////
+// const owners = ['Jonas', 'Daniel', 'Krisina', 'John'];
+// console.log(owners.sort());
+
+// console.log(movements.sort());
+
+// When using the sort callback function, the order of a and b is as follows:
+// [b, a]
+// In other words, when looking at the movements array, a is 450 and b is 200.
+// if a - b returns < 0, a is less than b (SWITCH TO [A, B])
+// if a - b returns > 0, a is greater than b (KEEP AS [B, A])
+
+// This is ascending order
+// console.log(
+//   movements.sort((a, b) => {
+//     // console.log(`A: ${a} and B: ${b}`);
+//     // console.log(a - b);
+//     return a - b;
+//   })
+// );
+
+// /////////////////////////////////////////////////
+// // Array flat() method
+// // - returns a new array that "flattens" a nested array
+// // - you can also specify how many levels deep you need to flatten
+// /////////////////////////////////////////////////
+// const nestedArray = [
+//   [1, 2, 3],
+//   [4, 5, 6],
+// ];
+
+// const deepNestedArray = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+// console.log(nestedArray.flat());
+// console.log(deepNestedArray.flat());
+// console.log(deepNestedArray.flat(2));
+
+// const accountTransactions = accounts.map(acc => acc.transactions);
+// console.log(accountTransactions);
+// const allTransactions = accountTransactions.flat();
+// console.log(allTransactions);
+// const overallBalance = allTransactions.reduce((acc, val) => acc + val, 0);
+// console.log(overallBalance);
+
+// /////////////////////////////////////////////////
+// // Array flatMap() method
+// // - returns a new array that "flattens" a nested array and performs an operation to each element
+// // - you can only do ONE level of flattening
+// /////////////////////////////////////////////////
+// const overallBalanceFlatMap = accounts
+//   .flatMap(acc => acc.transactions)
+//   .reduce((acc, val) => acc + val, 0);
+// console.log(overallBalanceFlatMap);
+
 // /////////////////////////////////////////////////
 // // Array every() method
 // // - return boolean if all elements in array satisfy the condition
 // /////////////////////////////////////////////////
-const allDeposits = account4.transactions.every(move => move > 0);
-console.log(allDeposits);
+// const allDeposits = account4.transactions.every(move => move > 0);
+// console.log(allDeposits);
 
 /////////////////////////////////////////////////
 // Array some() method
@@ -216,3 +306,85 @@ Test data:
 // };
 // console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
 // console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
+
+/////////////////////////////////////////////////
+// Coding Challenge #4
+/////////////////////////////////////////////////
+/* Julia and Kate are still studying dogs, and this time they are studying if dogs are
+eating too much or too little.
+Eating too much means the dog's current food portion is larger than the
+recommended portion, and eating too little is the opposite.
+Eating an okay amount means the dog's current food portion is within a range 10%
+above and 10% below the recommended portion (see hint).
+Your tasks: */
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+//1. Loop over the 'dogs' array containing dog objects, and for each dog, calculate
+// the recommended food portion and add it to the object as a new property. Do
+// not create a new array, simply loop over the array. Forumla:
+// recommendedFood = weight ** 0.75 * 28. (The result is in grams of
+// food, and the weight needs to be in kg)
+dogs.map(dog => {
+  dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
+});
+console.log(dogs);
+
+// 2. Find Sarah's dog and log to the console whether it's eating too much or too
+// little.
+const result = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(
+  `Sarah's dog is eating too ${
+    result.curFood > result.recommendedFood ? 'much' : 'little'
+  } `
+);
+
+// 3. Create an array containing all owners of dogs who eat too much
+// ('ownersEatTooMuch') and an array with all owners of dogs who eat too little
+// ('ownersEatTooLittle').
+const { ownersEatTooMuch, ownersEatTooLittle } = dogs.reduce(
+  (lists, dog) => {
+    dog.curFood > dog.recommendedFood
+      ? lists.ownersEatTooMuch.push(...dog.owners)
+      : lists.ownersEatTooLittle.push(...dog.owners);
+    return lists;
+  },
+  { ownersEatTooMuch: [], ownersEatTooLittle: [] }
+);
+console.log(ownersEatTooMuch, ownersEatTooLittle);
+
+// 4. Log a string to the console for each array created in 3., like this: "Matilda and
+// Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat
+// too little!"
+console.log(`${ownersEatTooMuch.join(' and ')}'s dogs eat too much!`);
+console.log(`${ownersEatTooLittle.join(' and ')}'s dogs eat too little!`);
+
+// 5. Log to the console whether there is any dog eating exactly the amount of food
+// that is recommended (just true or false)
+console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+
+// 6. Log to the console whether there is any dog eating an okay amount of food
+// (just true or false)
+const checkEatingOkay = dog =>
+  dog.curFood <= dog.recommendedFood * 1.1 &&
+  dog.curFood >= dog.recommendedFood * 0.9;
+
+console.log(dogs.some(checkEatingOkay));
+
+// 7. Create an array containing the dogs that are eating an okay amount of food (try
+// to reuse the condition used in 6.)
+const dogsEatingOkay = dogs.filter(checkEatingOkay);
+console.log(dogsEatingOkay);
+
+// 8. Create a shallow copy of the 'dogs' array and sort it by recommended food
+// portion in an ascending order (keep in mind that the portions are inside the
+//  array's objects)
+const dogsCopySorted = dogs
+  .slice()
+  .sort((a, b) => a.recommendedFood - b.recommendedFood);
+console.log(dogsCopySorted);
