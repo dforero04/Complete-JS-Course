@@ -61,6 +61,26 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const computeUsername = accounts => {
+  accounts.forEach(acc => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(value => value[0])
+      .join('');
+  });
+};
+computeUsername(accounts);
+
+const formatUSDAmount = function (amount) {
+  const amountFormat = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  });
+  return amountFormat.format(amount);
+};
+
 const displayTransactions = function (account) {
   let html;
   if (account.transactions.length === 0) {
@@ -76,11 +96,11 @@ const displayTransactions = function (account) {
       html = `
       <div class="transactions__row">
         <div class="transactions__type transactions__type--${typeTransaction}">
-            ${i} ${typeTransaction}
+            ${i + 1} ${typeTransaction}
         </div>
         <div class="transactions__value">${
-          typeTransaction === 'deposit' ? '$' : '-$'
-        }${Math.abs(tran)}</div>
+          typeTransaction === 'deposit' ? '' : '-'
+        }${formatUSDAmount(Math.abs(tran))}</div>
       </div>
     `;
       containerTransactions.insertAdjacentHTML('afterbegin', html);
@@ -88,39 +108,34 @@ const displayTransactions = function (account) {
   }
 };
 
-const computeUsername = accounts => {
-  accounts.forEach(acc => {
-    acc.username = acc.owner
-      .toLowerCase()
-      .split(' ')
-      .map(value => value[0])
-      .join('');
-  });
-};
-computeUsername(accounts);
-
 const calcTotalBalance = function (account) {
   account.balance = account.transactions.reduce((acc, val) => acc + val, 0);
-  labelBalance.textContent = `${account.balance} USD`;
+  labelBalance.textContent = formatUSDAmount(account.balance);
 };
 
 const calcDisplaySummary = function (account) {
   const incomes = account.transactions
     .filter(tran => tran > 0)
     .reduce((acc, val) => acc + val, 0);
-  labelSumIn.textContent = `$${incomes}`;
+  labelSumIn.textContent = formatUSDAmount(incomes);
 
   const withdrawals = account.transactions
     .filter(tran => tran < 0)
     .reduce((acc, val) => acc + val, 0);
-  labelSumOut.textContent = `$${Math.abs(withdrawals)}`;
+  labelSumOut.textContent = `${formatUSDAmount(Math.abs(withdrawals))}`;
 
   const interest = (incomes * account.interestRate) / 100;
-  labelSumInterest.textContent = `$${interest}`;
+  labelSumInterest.textContent = `${formatUSDAmount(interest)}`;
 };
 
 const findUser = function (username) {
   return accounts.find(account => account.username === username);
+};
+
+const displayUpdateUI = function () {
+  displayTransactions(currentAccount);
+  calcTotalBalance(currentAccount);
+  calcDisplaySummary(currentAccount);
 };
 
 let currentAccount;
@@ -141,9 +156,7 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     // Takes focus off of input field
     inputLoginPin.blur();
-    displayTransactions(currentAccount);
-    calcTotalBalance(currentAccount);
-    calcDisplaySummary(currentAccount);
+    displayUpdateUI();
   }
 });
 
@@ -152,18 +165,56 @@ btnTransfer.addEventListener('click', function (e) {
   const transTo = findUser(inputTransferTo.value);
   const transAmt = Number(inputTransferAmount.value);
   if (!transTo) alert('TRANSFER ACCOUNT NOT FOUND!');
-  else if (transAmt > currentAccount.balance && transAmt <= 0)
+  else if (transAmt > currentAccount.balance)
     alert('TRANSFER AMOUNT GREATER THAN ACCOUNT BALANCE!');
+  else if (transAmt <= 0) alert('MUST TRANSFER AT LEAST $0.01');
+  else if (transTo?.owner === currentAccount.owner)
+    alert('YOU CANNOT SEND MONEY TO YOURSELF!');
   else {
     currentAccount.transactions.push(-transAmt);
     transTo.transactions.push(transAmt);
     inputTransferAmount.blur();
     inputTransferAmount.value = inputTransferTo.value = '';
-    displayTransactions(currentAccount.transactions);
-    calcTotalBalance(currentAccount);
-    calcDisplaySummary(currentAccount);
+    displayUpdateUI();
   }
 });
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const loanAmt = Number(inputLoanAmount.value);
+  if (loanAmt <= 0) alert('YOU MUST ASK FOR AT LEAST $0.01.');
+  else if (!currentAccount.transactions.some(trans => trans >= loanAmt * 0.1))
+    alert('YOU MUST HAVE A DEPOSIT THAT IS AT LEAST 10% OF THE LOAN AMOUNT!');
+  else {
+    currentAccount.transactions.push(loanAmt);
+    inputLoanAmount.blur();
+    inputLoanAmount.value = '';
+    displayUpdateUI();
+  }
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  const closeUsername = findUser(inputCloseUsername.value);
+  const closePin = Number(inputClosePin.value);
+  if (!closeUsername) alert('USER ACCOUNT NOT FOUND!');
+  else if (
+    closeUsername !== currentAccount.username &&
+    closePin !== currentAccount.pin
+  )
+    alert("YOU CANNOT CLOSE SOMEONE ELSE'S ACCOUNT!");
+  else {
+    const index = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+    accounts.splice(index, 1);
+    labelWelcome.textContent = 'Log in to get started';
+    containerApp.style.opacity = 0;
+  }
+  inputTransferAmount.value = inputTransferTo.value = '';
+  currentAccount = 'No user logged in.';
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES / CONCEPTS
@@ -176,6 +227,21 @@ btnTransfer.addEventListener('click', function (e) {
 // ]);
 
 // const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// /////////////////////////////////////////////////
+// // Array every() method
+// // - return boolean if all elements in array satisfy the condition
+// /////////////////////////////////////////////////
+// const allDeposits = account4.transactions.every(move => move > 0);
+// console.log(allDeposits);
+
+/////////////////////////////////////////////////
+// Array some() method
+// - return boolean if at least one element in array satisfies the condition
+// - this differs from includes() because we can add a condition to this method
+/////////////////////////////////////////////////
+// const anyDeposits = movements.some(move => move > 0);
+// console.log(anyDeposits);
 
 /////////////////////////////////////////////////
 // Array find() method
