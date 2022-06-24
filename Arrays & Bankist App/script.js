@@ -61,22 +61,33 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayTransactions = function (transactions) {
-  transactions.forEach(function (tran, i) {
-    const typeTransaction = tran > 0 ? 'deposit' : 'withdrawal';
-    const html = `
+const displayTransactions = function (account) {
+  let html;
+  if (account.transactions.length === 0) {
+    html = `
+    <div class="transactions__row">
+      <div class="transactions__empty">No transactions to display.</div>
+    </div>
+  `;
+    containerTransactions.insertAdjacentHTML('afterbegin', html);
+  } else {
+    account.transactions.forEach(function (tran, i) {
+      const typeTransaction = tran > 0 ? 'deposit' : 'withdrawal';
+      html = `
       <div class="transactions__row">
         <div class="transactions__type transactions__type--${typeTransaction}">
             ${i} ${typeTransaction}
         </div>
-        <div class="transactions__value">${tran}</div>
+        <div class="transactions__value">${
+          typeTransaction === 'deposit' ? '$' : '-$'
+        }${Math.abs(tran)}</div>
       </div>
     `;
-
-    containerTransactions.insertAdjacentHTML('afterbegin', html);
-  });
+      containerTransactions.insertAdjacentHTML('afterbegin', html);
+    });
+  }
 };
-displayTransactions(account1.transactions);
+
 const computeUsername = accounts => {
   accounts.forEach(acc => {
     acc.username = acc.owner
@@ -88,13 +99,71 @@ const computeUsername = accounts => {
 };
 computeUsername(accounts);
 
-const calcTotalBalance = function (transactions) {
-  labelBalance.textContent = `${transactions.reduce(
-    (acc, val) => acc + val
-  )} USD`;
+const calcTotalBalance = function (account) {
+  account.balance = account.transactions.reduce((acc, val) => acc + val, 0);
+  labelBalance.textContent = `${account.balance} USD`;
 };
-calcTotalBalance(account1.transactions);
 
+const calcDisplaySummary = function (account) {
+  const incomes = account.transactions
+    .filter(tran => tran > 0)
+    .reduce((acc, val) => acc + val, 0);
+  labelSumIn.textContent = `$${incomes}`;
+
+  const withdrawals = account.transactions
+    .filter(tran => tran < 0)
+    .reduce((acc, val) => acc + val, 0);
+  labelSumOut.textContent = `$${Math.abs(withdrawals)}`;
+
+  const interest = (incomes * account.interestRate) / 100;
+  labelSumInterest.textContent = `$${interest}`;
+};
+
+const findUser = function (username) {
+  return accounts.find(account => account.username === username);
+};
+
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+  currentAccount = findUser(inputLoginUsername.value);
+  if (!currentAccount) alert('Incorrect Username!');
+  else if (Number(inputLoginPin.value) !== currentAccount?.pin)
+    alert('INCORRECT PIN!');
+  else {
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    // Show UI
+    containerApp.style.opacity = 100;
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    // Takes focus off of input field
+    inputLoginPin.blur();
+    displayTransactions(currentAccount);
+    calcTotalBalance(currentAccount);
+    calcDisplaySummary(currentAccount);
+  }
+});
+
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const transTo = findUser(inputTransferTo.value);
+  const transAmt = Number(inputTransferAmount.value);
+  if (!transTo) alert('TRANSFER ACCOUNT NOT FOUND!');
+  else if (transAmt > currentAccount.balance && transAmt <= 0)
+    alert('TRANSFER AMOUNT GREATER THAN ACCOUNT BALANCE!');
+  else {
+    currentAccount.transactions.push(-transAmt);
+    transTo.transactions.push(transAmt);
+    inputTransferAmount.blur();
+    inputTransferAmount.value = inputTransferTo.value = '';
+    displayTransactions(currentAccount.transactions);
+    calcTotalBalance(currentAccount);
+    calcDisplaySummary(currentAccount);
+  }
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES / CONCEPTS
@@ -107,6 +176,13 @@ calcTotalBalance(account1.transactions);
 // ]);
 
 // const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/////////////////////////////////////////////////
+// Array find() method
+// - return first element in array that satisfies the callback fn
+/////////////////////////////////////////////////
+// const firstWithdrawal = movements.find(move => move < 0);
+// console.log(firstWithdrawal);
 
 /////////////////////////////////////////////////
 // Array.map()
@@ -257,10 +333,10 @@ Test data:
 § Data 1: [5, 2, 4, 1, 15, 8, 3]
 § Data 2: [16, 6, 10, 5, 6, 1, 4] */
 
-const calcAverageHumanAge = function (ages) {
-  const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
-  const atLeast18 = humanAges.filter(age => age >= 18);
-  return atLeast18.reduce((sum, val) => sum + val, 0) / atLeast18.length;
-};
-console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
-console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
+// const calcAverageHumanAge = function (ages) {
+//   const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
+//   const atLeast18 = humanAges.filter(age => age >= 18);
+//   return atLeast18.reduce((sum, val) => sum + val, 0) / atLeast18.length;
+// };
+// console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
+// console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
