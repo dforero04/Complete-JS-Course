@@ -48,3 +48,44 @@
 // console.log((2.7).toFixed(3));
 // console.log((2.345).toFixed(2));
 // console.log(+(2.345).toFixed(2));
+
+// // Numeric Separators
+// // - basically an underscore that makes larger numbers easier to read
+// const diameterEarth = 287_345_000_000;
+// console.log(diameterEarth);
+
+// // BigInt
+// // - used to store numbers of any size
+// console.log(1234123134523452345123424564567090459694596n);
+// console.log(BigInt(12341234));
+
+// const bigInt = 9459645687456934993468934569n;
+// const num = 4;
+// console.log(bigInt * BigInt(num));
+
+// console.log(20n == 20);
+// console.log(20n === 20);
+
+// // Dates and Times
+// const now = new Date();
+// console.log(now);
+
+// console.log(new Date('Dec 10 1992'));
+// console.log(new Date(2022, 5, 28, 14, 30, 5));
+
+// // Uses your timezone
+// console.log(new Date(0));
+
+// const future = new Date(2033, 4, 1, 14, 14, 14);
+// console.log(future);
+// console.log(future.getFullYear());
+// console.log(future.getMonth());
+// // Day of week
+// console.log(future.getDay());
+// // Day of month
+// console.log(future.getDate());
+// console.log(future.getHours());
+// console.log(future.getMinutes());
+// console.log(future.getSeconds());
+// console.log(future.toISOString());
+// console.log(future.toUTCString());
