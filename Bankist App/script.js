@@ -7,11 +7,11 @@
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
+  transactions: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 
-  movementsDates: [
+  transactionDates: [
     '2019-11-18T21:31:17.178Z',
     '2019-12-23T07:42:02.383Z',
     '2020-01-28T09:15:04.904Z',
@@ -27,11 +27,11 @@ const account1 = {
 
 const account2 = {
   owner: 'Jessica Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  transactions: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
 
-  movementsDates: [
+  transactionDates: [
     '2019-11-01T13:15:33.035Z',
     '2019-11-30T09:48:16.867Z',
     '2019-12-25T06:04:23.907Z',
@@ -114,11 +114,13 @@ const displayTransactions = function (account, sort = false) {
 
     transactions.forEach(function (tran, i) {
       const typeTransaction = tran > 0 ? 'deposit' : 'withdrawal';
+      const date = displayDateAndTime(account.transactionDates[i]);
       html = `
       <div class="transactions__row">
         <div class="transactions__type transactions__type--${typeTransaction}">
             ${i + 1} ${typeTransaction}
         </div>
+        <div class="transactions__date">${date}</div>
         <div class="transactions__value">${
           typeTransaction === 'deposit' ? '' : '-'
         }${formatUSDAmount(Math.abs(tran))}</div>
@@ -132,6 +134,7 @@ const displayTransactions = function (account, sort = false) {
 const calcTotalBalance = function (account) {
   account.balance = account.transactions.reduce((acc, val) => acc + val, 0);
   labelBalance.textContent = formatUSDAmount(account.balance);
+  labelDate.textContent = displayDateAndTime(new Date());
 };
 
 const calcDisplaySummary = function (account) {
@@ -151,6 +154,14 @@ const calcDisplaySummary = function (account) {
 
 const findUser = function (username) {
   return accounts.find(account => account.username === username);
+};
+
+const displayDateAndTime = function (date) {
+  const dateString = new Date(date);
+  return `${(dateString.getMonth() + 1).toString().padStart(2, 0)}/${dateString
+    .getDate()
+    .toString()
+    .padStart(2, 0)}/${dateString.getFullYear()}`;
 };
 
 const displayUpdateUI = function () {
@@ -196,7 +207,9 @@ btnTransfer.addEventListener('click', function (e) {
     alert('YOU CANNOT SEND MONEY TO YOURSELF!');
   else {
     currentAccount.transactions.push(-transAmt);
+    currentAccount.transactionDates.push(new Date().toISOString());
     transTo.transactions.push(transAmt);
+    transTo.transactionDates.push(new Date().toISOString());
     inputTransferAmount.blur();
     inputTransferAmount.value = inputTransferTo.value = '';
     displayUpdateUI();
@@ -213,6 +226,7 @@ btnLoan.addEventListener('click', function (e) {
     alert('YOU MUST HAVE A DEPOSIT THAT IS AT LEAST 10% OF THE LOAN AMOUNT!');
   else {
     currentAccount.transactions.push(loanAmt);
+    currentAccount.transactionDates.push(new Date());
     inputLoanAmount.blur();
     inputLoanAmount.value = '';
     displayUpdateUI();
