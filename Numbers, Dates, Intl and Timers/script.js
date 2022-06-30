@@ -89,3 +89,24 @@
 // console.log(future.getSeconds());
 // console.log(future.toISOString());
 // console.log(future.toUTCString());
+
+/////////////////////////////////////////////////
+// Timers
+/////////////////////////////////////////////////
+
+// setTimeout(callback, time in ms, arguments to callback)
+// const ingredients = ['chicken', 'olives'];
+// const pizzaTimer = setTimeout(
+//   (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}!`),
+//   3000,
+//   ...ingredients
+// );
+// console.log('Waiting...');
+// // This is used to clear/stop the timeout
+// if (ingredients.includes('olives')) clearTimeout(pizzaTimer);
+
+// setInterval
+// setInterval(() => {
+//   const now = new Date();
+//   console.log(now);
+// }, 2000);

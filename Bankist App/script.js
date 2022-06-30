@@ -1,8 +1,9 @@
 'use strict';
+// TODO: add functionality to add new users
 
 /////////////////////////////////////////////////
-/////////////////////////////////////////////////
 // BANKIST APP
+/////////////////////////////////////////////////
 
 // Data
 const account1 = {
@@ -73,6 +74,10 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// Setup and Global Variables
+let sorted = false;
+let currentAccount, timer;
+
 const computeUsername = accounts => {
   accounts.forEach(acc => {
     acc.username = acc.owner
@@ -84,19 +89,38 @@ const computeUsername = accounts => {
 };
 computeUsername(accounts);
 
-const formatUSDAmount = function (amount) {
-  const amountFormat = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  });
+// Helper Functions
+const findUser = function (username) {
+  return accounts.find(account => account.username === username);
+};
 
-  return amountFormat.format(amount);
+const displayUpdateUI = function () {
+  calcTotalBalance(currentAccount);
+  displayTransactions(currentAccount);
+  calcDisplaySummary(currentAccount);
+};
+
+const startLogoutTimer = function () {
+  let time = 300;
+  const timer = setInterval(() => {
+    const min = String(Math.floor(time / 60)).padStart(2, 0);
+    const secs = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${secs}`;
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent =
+        'You have been logged out. Log in to get started';
+      containerApp.style.opacity = 0;
+      currentAccount = 'No User Logged In.';
+    }
+    time--;
+  }, 1000);
+  return timer;
 };
 
 const displayTransactions = function (account, sort = false) {
   let html;
-  let transactions;
+  let transactions, transactionDates;
 
   containerTransactions.innerHTML = '';
 
@@ -108,13 +132,16 @@ const displayTransactions = function (account, sort = false) {
   `;
     containerTransactions.insertAdjacentHTML('afterbegin', html);
   } else {
-    transactions = sort
-      ? account.transactions.slice().sort((a, b) => a - b) // you need .slice() to make a shallow copy
-      : account.transactions;
+    [transactions, transactionDates] = sort
+      ? sortTransactionsAndDates(account)
+      : [account.transactions, account.transactionDates];
 
     transactions.forEach(function (tran, i) {
       const typeTransaction = tran > 0 ? 'deposit' : 'withdrawal';
-      const date = displayDateAndTime(account.transactionDates[i]);
+      const date = displayDateAndTime(
+        new Date(transactionDates[i]),
+        account.locale
+      );
       html = `
       <div class="transactions__row">
         <div class="transactions__type transactions__type--${typeTransaction}">
@@ -123,7 +150,11 @@ const displayTransactions = function (account, sort = false) {
         <div class="transactions__date">${date}</div>
         <div class="transactions__value">${
           typeTransaction === 'deposit' ? '' : '-'
-        }${formatUSDAmount(Math.abs(tran))}</div>
+        }${formatCurrencyAmount(
+        Math.abs(tran),
+        account.locale,
+        account.currency
+      )}</div>
       </div>
     `;
       containerTransactions.insertAdjacentHTML('afterbegin', html);
@@ -131,47 +162,77 @@ const displayTransactions = function (account, sort = false) {
   }
 };
 
+const sortTransactionsAndDates = function (account) {
+  let combined = [],
+    sortedTrans = [],
+    sortedDates = [];
+  account.transactions.forEach((el, index) =>
+    combined.push([el, account.transactionDates[index]])
+  );
+  combined.sort((a, b) => a[0] - b[0]);
+  combined.forEach((el, index) => {
+    sortedTrans.push(el[0]);
+    sortedDates.push(el[1]);
+  });
+  return [sortedTrans, sortedDates];
+};
+
 const calcTotalBalance = function (account) {
   account.balance = account.transactions.reduce((acc, val) => acc + val, 0);
-  labelBalance.textContent = formatUSDAmount(account.balance);
-  labelDate.textContent = displayDateAndTime(new Date());
+  labelBalance.textContent = formatCurrencyAmount(
+    account.balance,
+    account.locale,
+    account.currency
+  );
+  labelDate.textContent = displayDateAndTime(new Date(), account.locale);
 };
 
 const calcDisplaySummary = function (account) {
   const incomes = account.transactions
     .filter(tran => tran > 0)
     .reduce((acc, val) => acc + val, 0);
-  labelSumIn.textContent = formatUSDAmount(incomes);
+  labelSumIn.textContent = formatCurrencyAmount(
+    incomes,
+    account.locale,
+    account.currency
+  );
 
   const withdrawals = account.transactions
     .filter(tran => tran < 0)
     .reduce((acc, val) => acc + val, 0);
-  labelSumOut.textContent = `${formatUSDAmount(Math.abs(withdrawals))}`;
+  labelSumOut.textContent = formatCurrencyAmount(
+    Math.abs(withdrawals),
+    account.locale,
+    account.currency
+  );
 
   const interest = (incomes * account.interestRate) / 100;
-  labelSumInterest.textContent = `${formatUSDAmount(interest)}`;
+  labelSumInterest.textContent = formatCurrencyAmount(
+    interest,
+    account.locale,
+    account.currency
+  );
 };
 
-const findUser = function (username) {
-  return accounts.find(account => account.username === username);
+const displayDateAndTime = function (date, locale) {
+  const options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+  return new Intl.DateTimeFormat(locale, options).format(date);
 };
 
-const displayDateAndTime = function (date) {
-  const dateString = new Date(date);
-  return `${(dateString.getMonth() + 1).toString().padStart(2, 0)}/${dateString
-    .getDate()
-    .toString()
-    .padStart(2, 0)}/${dateString.getFullYear()}`;
+const formatCurrencyAmount = function (amount, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
 };
 
-const displayUpdateUI = function () {
-  displayTransactions(currentAccount);
-  calcTotalBalance(currentAccount);
-  calcDisplaySummary(currentAccount);
-};
-
-let currentAccount;
-
+// Event Listeners
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -190,6 +251,8 @@ btnLogin.addEventListener('click', function (e) {
     // Takes focus off of input field
     inputLoginPin.blur();
     displayUpdateUI();
+    if (timer) clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -213,6 +276,8 @@ btnTransfer.addEventListener('click', function (e) {
     inputTransferAmount.blur();
     inputTransferAmount.value = inputTransferTo.value = '';
     displayUpdateUI();
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -230,6 +295,8 @@ btnLoan.addEventListener('click', function (e) {
     inputLoanAmount.blur();
     inputLoanAmount.value = '';
     displayUpdateUI();
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -257,7 +324,6 @@ btnClose.addEventListener('click', function (e) {
   currentAccount = 'No user logged in.';
 });
 
-let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
   displayTransactions(currentAccount, !sorted);
