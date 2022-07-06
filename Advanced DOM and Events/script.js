@@ -233,3 +233,47 @@
 
 // // access all siblings
 // console.log(h1.parentElement.children);
+
+//// ///////////////////////////////////////////////
+//// Lifecycle DOM Events
+//// ///////////////////////////////////////////////
+
+// // DOMContentLoaded event
+// // https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
+// // - This event is triggered once HTML is parsed and DOM tree is built
+// // - In other words, it does not wait for stylesheets, images, or external content
+// // - Since the <script> tag is at the bottom on the HTML file, all of the HTML
+// // will already be parsed by the time the JS is being parsed
+// document.addEventListener('DOMContentLoaded', function (e) {
+//   console.log('HTML parsed and DOM tree built');
+//   console.log(e);
+// });
+
+// // load event
+// // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+// // - This event is triggered once everything on the page is loaded,
+// // including all dependent resources such as stylesheets and images.
+// window.addEventListener('load', function (e) {
+//   console.log('page fully loaded');
+//   console.log(e);
+// });
+
+// // beforeunload event
+// // https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+// // - This event is triggered when the window, document, and resources are about to be unloaded.
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   // prompts user if they want to leave the page
+//   e.returnValue = '';
+// });
+
+/////////////////////////////////////////////////
+// Efficient Script Loading: defer and async loading
+/////////////////////////////////////////////////
+// WATCH VIDEO FOR BEST, VISUAL EXPLANATION
+
+/////////////////////////////////////////////////
+// FOR MORE ADVANCED DOM FEATURES AND EVENTS, LOOK AT CODE FOR
+// BANKIST HOMEPAGE
+/////////////////////////////////////////////////
