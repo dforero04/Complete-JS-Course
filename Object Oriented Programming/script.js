@@ -254,3 +254,4 @@ console.log(yourCar.speedUK);
 // converts it to km/h before storing the value, by multiplying the input by 1.6)
 yourCar.speedUK = 10;
 console.log(yourCar.speed);
+console.log('works');
