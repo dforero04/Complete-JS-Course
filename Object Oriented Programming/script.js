@@ -395,3 +395,91 @@
 // studentDan.introduce();
 // studentDan.calcAge();
 // console.log(studentDan);
+
+// /////////////////////////////////////////////////
+// // Inheritance Between "Classes": ES6 Classes
+// /////////////////////////////////////////////////
+
+// const PersonProto = {
+//   calcAge() {
+//     console.log(new Date().getFullYear() - this.birthYear);
+//   },
+//   init(firstName, birthYear) {
+//     this.firstName = firstName;
+//     this.birthYear = birthYear;
+//   },
+// };
+
+// const p1 = Object.create(PersonProto);
+
+// const StudentProto = Object.create(PersonProto);
+// StudentProto.init = function (firstName, birthYear, course) {
+//   PersonProto.init.call(this, firstName, birthYear);
+//   this.course = course;
+// };
+// StudentProto.introduce = function () {
+//   console.log(`My name is ${this.firstName} and I am taking ${this.course}`);
+// };
+
+// const stud1 = Object.create(StudentProto);
+// stud1.init('John', 1996, 'BUS101');
+// stud1.introduce();
+// stud1.calcAge();
+// console.log(stud1);
+
+/////////////////////////////////////////////////
+// Encapsulation: Protected and Private Properties and Methods
+// NOTE: These features are not yet fully implemented into JS yet
+// NOTE: Each of the private and public fields and methods can also be static
+/////////////////////////////////////////////////
+
+class Account {
+  // Public fields (on each instance)
+  locale = navigator.language;
+
+  // Private fields
+  #transactions = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    // Protected Props
+    // Just a known convention to not display this prop to the user
+    // Identified with an _
+  }
+
+  // Public methods
+  deposit(val) {
+    this.#transactions.push(val);
+  }
+
+  withdrawal(val) {
+    this.deposit(-val);
+  }
+
+  //   requestLoan(val){
+  //     if(#approveLoan()) this.deposit(val)
+  //   }
+
+  // Private methods
+  // Still not yet implemented
+  //   #approveLoan() {
+  //     return true;
+  //   };
+}
+
+const acc1 = new Account('Daniel', 'USD', 1234);
+console.log(acc1);
+acc1.deposit(500);
+acc1.withdrawal(250);
+console.log(acc1);
+// Will not display because it is private
+// console.log(acc1.#transactions);
+// console.log(acc1.#pin);
+
+/////////////////////////////////////////////////
+// Method Chaining in a custom Object
+// - You must return the object (this) in each method that you want to be chainable
+/////////////////////////////////////////////////
