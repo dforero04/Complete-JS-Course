@@ -1,5 +1,4 @@
 'use strict';
-// import leaflet from 'leaflet';
 
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
@@ -16,9 +15,10 @@ class App {
 
   constructor() {
     this._getPosition();
+    this._getLocalStorage();
     form.addEventListener('submit', this._newWorkout.bind(this));
-
     inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -42,6 +42,10 @@ class App {
     }).addTo(this.#map);
 
     this.#map.on('click', this._showForm.bind(this));
+
+    this.#workouts.forEach(workout => {
+      this._renderWorkoutMarker(workout);
+    });
   }
 
   _showForm(mapE) {
@@ -107,6 +111,7 @@ class App {
     this._renderWorkoutList(workout);
     this._renderWorkoutMarker(workout);
     this._hideForm();
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -178,6 +183,39 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPopup(e) {
+    const workoutElement = e.target.closest('.workout');
+    if (!workoutElement) return;
+
+    const selectedWorkout = this.#workouts.find(
+      workout => workout.id === workoutElement.dataset.id
+    );
+    this.#map.setView(selectedWorkout.coords, 13, {
+      zoom: { animate: true },
+      pan: { duration: 1 },
+    });
+  }
+
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem('workouts'));
+
+    if (!data) return;
+
+    this.#workouts = data;
+    this.#workouts.forEach(workout => {
+      this._renderWorkoutList(workout);
+    });
+  }
+
+  reset() {
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 }
 
