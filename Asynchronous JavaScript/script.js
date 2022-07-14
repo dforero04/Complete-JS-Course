@@ -1,7 +1,7 @@
 'use strict';
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
+// const btn = document.querySelector('.btn-country');
+// const countriesContainer = document.querySelector('.countries');
 
 /////////////////////////////////////////////////
 // AJAX
@@ -37,21 +37,21 @@ const countriesContainer = document.querySelector('.countries');
 //   });
 // };
 
-const renderCountryCard = function (data, className = '') {
-  const html = `
-    <article class="country ${className}">
-      <img class="country__img" src="${data.flag}" />
-      <div class="country__data">
-          <h3 class="country__name">${data.name}</h3>
-          <h4 class="country__region">${data.region}</h4>
-          <p class="country__row"><span>👫</span>${+data.population} people</p>
-          <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
-          <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
-      </div>
-    </article>
-    `;
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-};
+// const renderCountryCard = function (data, className = '') {
+//   const html = `
+//     <article class="country ${className}">
+//       <img class="country__img" src="${data.flag}" />
+//       <div class="country__data">
+//           <h3 class="country__name">${data.name}</h3>
+//           <h4 class="country__region">${data.region}</h4>
+//           <p class="country__row"><span>👫</span>${+data.population} people</p>
+//           <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+//           <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+//       </div>
+//     </article>
+//     `;
+//   countriesContainer.insertAdjacentHTML('beforeend', html);
+// };
 
 // // Example of Callback HELL!!
 // const getCountryAndNeighborData = function (country) {
@@ -351,39 +351,39 @@ const renderCountryCard = function (data, className = '') {
 /////////////////////////////////////////////////
 // ASYNC/AWAIT
 /////////////////////////////////////////////////
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
-// AN ASYNC FUNCTION ALWAYS RETURNS A PROMISE
-const whereAmI = async function () {
-  try {
-    // fetch(`https://restcountries.com/v2/name/${country}`).then(res => console.log(res))
-    // This new syntax is exactly the same as the above code
-    const position = await getPosition();
-    const { latitude: lat, longitude: lng } = position.coords;
-    const geoFetch = await fetch(
-      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=921887219952458568891x76847`
-    );
-    if (!geoFetch.ok) throw new Error('Problem getting information!');
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
+// // AN ASYNC FUNCTION ALWAYS RETURNS A PROMISE
+// const whereAmI = async function () {
+//   try {
+//     // fetch(`https://restcountries.com/v2/name/${country}`).then(res => console.log(res))
+//     // This new syntax is exactly the same as the above code
+//     const position = await getPosition();
+//     const { latitude: lat, longitude: lng } = position.coords;
+//     const geoFetch = await fetch(
+//       `https://geocode.xyz/${lat},${lng}?geoit=json&auth=921887219952458568891x76847`
+//     );
+//     if (!geoFetch.ok) throw new Error('Problem getting information!');
 
-    const result = await geoFetch.json();
-    const response = await fetch(
-      `https://restcountries.com/v2/name/${result.country}`
-    );
-    if (!response.ok) throw new Error('Problem getting information!');
+//     const result = await geoFetch.json();
+//     const response = await fetch(
+//       `https://restcountries.com/v2/name/${result.country}`
+//     );
+//     if (!response.ok) throw new Error('Problem getting information!');
 
-    const data = await response.json();
-    renderCountryCard(data[0]);
-    countriesContainer.style.opacity = 1;
-    return `You are in ${result.city}, ${result.statename}`;
-  } catch (err) {
-    console.error(err);
-    // Reject promise returned from async function
-    throw err;
-  }
-};
+//     const data = await response.json();
+//     renderCountryCard(data[0]);
+//     countriesContainer.style.opacity = 1;
+//     return `You are in ${result.city}, ${result.statename}`;
+//   } catch (err) {
+//     console.error(err);
+//     // Reject promise returned from async function
+//     throw err;
+//   }
+// };
 
 // /////////////////////////////////////////////////
 // // Error Handling with try...catch
@@ -400,8 +400,84 @@ const whereAmI = async function () {
 /////////////////////////////////////////////////
 // Returning values from async functions
 /////////////////////////////////////////////////
-console.log('1: Will get location');
-whereAmI()
-  .then(response => console.log(`2: ${response}`))
-  .catch(err => console.error(`2: ${err}`))
-  .finally(() => console.log('3: Finished getting location'));
+// console.log('1: Will get location');
+// whereAmI()
+//   .then(response => console.log(`2: ${response}`))
+//   .catch(err => console.error(`2: ${err}`))
+//   .finally(() => console.log('3: Finished getting location'));
+
+// /////////////////////////////////////////////////
+// // Running Promises in Parallel
+// /////////////////////////////////////////////////
+// const get3countries = async function (c1, c2, c3) {
+//   try {
+//     // const [data1] = await getJSON(`https://restcountries.com/v2/name/${c1}`);
+//     // const [data2] = await getJSON(`https://restcountries.com/v2/name/${c2}`);
+//     // const [data3] = await getJSON(`https://restcountries.com/v2/name/${c3}`);
+//     // console.log([data1.capital, data2.capital, data3.capital]);
+
+//     // If one promise rejects, then the whole Promise.all() rejects!
+//     const data = await Promise.all([
+//       getJSON(`https://restcountries.com/v2/name/${c1}`),
+//       getJSON(`https://restcountries.com/v2/name/${c2}`),
+//       getJSON(`https://restcountries.com/v2/name/${c3}`),
+//     ]);
+//     console.log(data.map(d => d[0].capital));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+// get3countries('brazil', 'france', 'vietnam');
+
+/////////////////////////////////////////////////
+// Promise Combinators
+/////////////////////////////////////////////////
+
+// Promise.race()
+// - Receives an array of Promises, then settles when the first Promise settles
+// - The value of the settled Promise is the result of the Promise
+// (async function () {
+//   const res = await Promise.race([
+//     getJSON('https://restcountries.com/v2/name/italy'),
+//     getJSON('https://restcountries.com/v2/name/germany'),
+//     getJSON('https://restcountries.com/v2/name/greece'),
+//   ]);
+//   console.log(res[0]);
+// })();
+
+// // - Promise.race() can be very useful to help with very long fetches or slow internet connections
+// const timeout = function (sec) {
+//   return new Promise(function (_, reject) {
+//     setTimeout(function () {
+//       reject(new Error('Request took too long!'));
+//     }, sec * 1000);
+//   });
+// };
+// Promise.race([
+//   getJSON('https://restcountries.com/v2/name/greece'),
+//   timeout(0.1),
+// ])
+//   .then(res => console.log(res[0]))
+//   .catch(err => console.error(err));
+
+// // Promise.allSettled()
+// // - Receives an array of Promises, and returns an array of all results, regardless of resolved or rejected
+// Promise.allSettled([
+//   Promise.resolve('Success'),
+//   Promise.resolve('Hello World'),
+//   Promise.reject('Error!'),
+//   Promise.reject('NOO!'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err));
+
+// // Promise.any() (ES2021)
+// // -Receives an array of Promises, and returns the first resolved Promise and ignores rejected Promises
+// Promise.any([
+//   Promise.resolve('Success'),
+//   Promise.resolve('Hello World'),
+//   Promise.reject('Error!'),
+//   Promise.reject('NOO!'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err));
