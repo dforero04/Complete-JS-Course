@@ -1,0 +1,21 @@
+{
+  "name": "modern-js-development",
+  "version": "1.0.0",
+  "description": "practice",
+  "default": "index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "parcel": "^2.6.2"
+  }
+}
