@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 ///////////////////////////////////////////////////////
 // Closures
 // A closure gives a function access to all the variables of its parent function, even after that
@@ -311,3 +311,43 @@ Hints: Use many of the tools you learned about in this and the last section
 //       : (header.style.color = 'red');
 //   });
 // })();
+
+/////////////////////////////////////////////////
+// Pass-by-Value vs. Pass-by-Reference Examples
+// - Primitive values are pass by value (Number, String, Boolean, etc)
+//  -- THE PARAMETER VALUE COPIES TO ANOTHER VARIABLE
+//  -- These values are stored in the call stack
+// - Object values are pass by "reference" (Object literals, Arrays, Functions)
+//  -- THE ACTUAL PARAMETER IS PASSED TO THE FUNCTION
+//  -- These values are stored in the memory heap
+/////////////////////////////////////////////////
+
+// const flight = 'DL123';
+// const flightArr = [...flight];
+
+// const changeFlightNum = function (flightNum) {
+//   flightNum = typeof flightNum === 'string' ? 'DL987' : [...'DL987'];
+// };
+// const reverseFlight = function (flightNum) {
+//   let l = 0,
+//     r = flightNum.length;
+//   while (l < r) {
+//     [flightNum[l], flightNum[r]] = [flightNum[r], flightNum[l]];
+//     l++;
+//     r--;
+//   }
+// };
+// changeFlightNum(flight);
+// changeFlightNum(flightArr);
+// console.log(`After changeFlightNum: ${flight}`);
+// console.log(`After changeFlightNum: ${flightArr}`);
+// reverseFlight(flight);
+// reverseFlight(flightArr);
+// console.log(`After reverseFlight: ${flight}`);
+// console.log(`After reverseFlight: ${flightArr}`);
+
+// let age = 30;
+// let oldAge = age;
+// age = 31;
+// console.log(age);
+// console.log(oldAge);
